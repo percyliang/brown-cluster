@@ -3,21 +3,23 @@
 
 #include <assert.h>
 #include <math.h>
+#include <stdlib.h>
 //#include <values.h>
 #include <limits.h>
 #include <string.h>
 #include <iostream>
+#include <algorithm>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <vector>
 #include <string>
 #include <queue>
-#include <ext/hash_map>
-#include <ext/hash_set>
+#include <tr1/unordered_map>
+#include <tr1/unordered_set>
 
 using namespace std;
-using namespace __gnu_cxx;
+using namespace std::tr1;
 
 ////////////////////////////////////////////////////////////
 
@@ -38,8 +40,8 @@ using namespace __gnu_cxx;
 ////////////////////////////////////////////////////////////
 // Generate random numbers.
 
-inline int rand(int a)        { return rand() % a; }
-inline int rand(int a, int b) { return rand() % (b-a) + a; }
+inline int mrand(int a)        { return rand() % a; }
+inline int mrand(int a, int b) { return rand() % (b-a) + a; }
 inline double rand_double() {
   static const int BASE = 100000;
   return (double)(rand()%BASE)/BASE;

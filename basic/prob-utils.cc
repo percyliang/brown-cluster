@@ -68,7 +68,7 @@ IntVec rand_permutation(int n) {
   IntVec perm(n);
   foridx(i, n) perm[i] = i;
   foridx(i, n) {
-    int j = rand(i, n);
+    int j = mrand(i, n);
     int t = perm[i]; perm[i] = perm[j]; perm[j] = t;
   }
   return perm;

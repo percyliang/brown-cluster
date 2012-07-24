@@ -90,11 +90,6 @@ double GetOpt::GetDouble(const string &name, double default_value) const {
   return Exists(name) ? GetDouble(name) : default_value;
 }
 
-vector< OptInfo<bool> > bool_opts;
-vector< OptInfo<int> > int_opts;
-vector< OptInfo<double> > double_opts;
-vector< OptInfo<string> > string_opts;
-
 ////////////////////////////////////////////////////////////
 
 void process_opt(int argc, char *argv[]) {
@@ -171,7 +166,6 @@ void process_opt(int argc, char *argv[]) {
 }
 
 void init_opt(int argc, char *argv[]) {
-printf("N %d\n", (int)int_opts.size());
   process_opt(argc, argv);
   srand(rand_seed);
 }
@@ -191,8 +185,5 @@ void print_opts() {
 ////////////////////////////////////////////////////////////
 // Pre defined options.
 
-opt_define_int(rand_seed, "rand", time(NULL)*getpid(), "number to call srand with");
-
 // allow user to specify a comment always, so some arbitrary description
 // of this program execution can be embedded in the command-line
-opt_define_string(comment, "comment", "", "a description of this run");

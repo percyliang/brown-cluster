@@ -44,7 +44,6 @@ struct LogInfo {
   int max_ind_level; // Maximum indent level.
   int ms_per_line;   // Number of milliseconds between consecutive lines of output.
   string log_file;
-  bool write_to_stdout; // In addition to writing to the log file.
 
   // State.
   ofstream out;

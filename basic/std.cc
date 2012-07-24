@@ -1,5 +1,6 @@
 #include <sys/stat.h>
 #include <dirent.h>
+#include <unistd.h>
 #include "std.h"
 #include "str.h"
 #include "timer.h"

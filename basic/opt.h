@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <stdio.h>
 
 using namespace std;
 
@@ -72,6 +73,7 @@ inline bool opt_define_bool_wrap(const string &name, bool *var, bool val, const 
   bool_opts.push_back(OptInfo<bool>(name, var, msg, required));
   return val; 
 }
+
 inline int opt_define_int_wrap(const string &name, int *var, int val, const string &msg, bool required) {
   //printf("HELLO %s\n", name.c_str());
   int_opts.push_back(OptInfo<int>(name, var, msg, required));

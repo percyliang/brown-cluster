@@ -110,11 +110,11 @@ template<class T> int mem_usage(const vector<T> &vec) { // vector
   return len(vec) * sizeof(T);
 }
 
-template<class T> int mem_usage(const hash_set<T> &set) { // hash_set
+template<class T> int mem_usage(const unordered_set<T> &set) { // hash_set
   return (int)set.bucket_count()*4 + len(set)*(sizeof(T)+sizeof(void *));
 }
 
-template<class Tx, class Ty, class Hf, class Eq> int mem_usage(const hash_map<Tx, Ty, Hf, Eq> &map) { // hash_map
+template<class Tx, class Ty, class Hf, class Eq> int mem_usage(const unordered_map<Tx, Ty, Hf, Eq> &map) { // hash_map
   return (int)map.bucket_count()*4 + len(map)*(sizeof(Tx)+sizeof(Ty)+sizeof(void *));
 }
 

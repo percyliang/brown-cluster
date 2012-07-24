@@ -1,35 +1,45 @@
 Implementation of the Brown hierarchical word clustering algorithm.
 Percy Liang
-Release 1.2
-2008.12.31
+Release 1.3
+2012.07.24
+
+Input: a sequence of words separated by whitespcae (see input.txt for an example).
+Output: for each word type, its cluster (see output.txt for an example).
+        In particular, each line is:
+  <cluster represented as a bit string> <word> <number of times word occurs in input>
 
 Runs in $O(N C^2)$, where $N$ is the number of word types and $C$
 is the number of clusters.
 
 References:
-Brown, et al.: Class-Based n-gram Models of Natural Language
-  http://acl.ldc.upenn.edu/J/J92/J92-4003.pdf
-Liang: Semi-supervised learning for natural language processing
-  http://www.cs.berkeley.edu/~pliang/papers/meng-thesis.pdf
+
+  Brown, et al.: Class-Based n-gram Models of Natural Language
+    http://acl.ldc.upenn.edu/J/J92/J92-4003.pdf
+
+  Liang: Semi-supervised learning for natural language processing
+    http://www.cs.berkeley.edu/~pliang/papers/meng-thesis.pdf
 
 Compile:
-make
+
+  make
 
 Run:
-# Clusters input.txt into 50 clusters (--max-ind-level controls amount of verbose output)
-./wcluster --text input.txt --c 50 --max-ind-level 3
-Look at input-c50-p1.out/paths
+
+  # Clusters input.txt into 50 clusters (--max-ind-level controls amount of verbose output)
+  ./wcluster --text input.txt --c 50 --max-ind-level 3
+  # Output in input-c50-p1.out/paths
 
 ============================================================
 Change Log
 
+1.3: compatibility updates for newer versions of g++ (courtesy of Chris Dyer).
 1.2: make compatible with MacOS (replaced timespec with timeval and changed order of linking).
 1.1: Removed deprecated operators so it works with GCC 4.3.
 
 ============================================================
-(C) Copyright 2007, Percy Liang
+(C) Copyright 2007-2012, Percy Liang
 
-http://www.cs.berkeley.edu/~pliang
+http://cs.stanford.edu/~pliang
 
 Permission is granted for anyone to copy, use, or modify these programs and
 accompanying documents for purposes of research or education, provided this

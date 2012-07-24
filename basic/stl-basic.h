@@ -2,6 +2,7 @@
 #define __STL_BASIC_H__
 
 #include "std.h"
+#include "city.h"
 
 ////////////////////////////////////////////////////////////
 
@@ -43,10 +44,13 @@ struct vector_eq {
 };
 struct vector_hf {
   size_t operator()(const IntVec &v) const {
+    return CityHash64(reinterpret_cast<const char*>(&v[0]), sizeof(int) * v.size());
+#if 0
     int h = 0;
     foridx(i, len(v))
       h = (h<<4)^(h>>28)^v[i];
     return h;
+#endif
   }
 };
 
@@ -68,10 +72,7 @@ struct str_eq {
 };
 struct str_hf {
   size_t operator()(const char *s) const {
-    int h = 0;
-    while(*s)
-      h = (h<<4)^(h>>28)^(*s++);
-    return h;
+    return CityHash64(s, strlen(s));
   }
 };
 
@@ -82,31 +83,31 @@ struct string_eq {
 };
 struct string_hf {
   size_t operator()(const string &s) const {
-    return str_hf()(s.c_str());
+    return CityHash64(s.c_str(), s.size());
   }
 };
 
 ////////////////////////////////////////////////////////////
 
-typedef hash_set<int> IntSet;
-typedef hash_set<IntPair, pair_hf, pair_eq> IntPairSet;
-typedef hash_set<IntVec, vector_hf, vector_eq> IntVecSet;
-typedef hash_map<IntVec, real, vector_hf, vector_eq> IntVecDoubleMap;
-typedef hash_map<IntVec, int, vector_hf, vector_eq> IntVecIntMap;
-typedef hash_map<int, int> IntIntMap;
-typedef hash_map<int, real> IntDoubleMap;
-typedef hash_map<int, IntPair> IntIntPairMap;
-typedef hash_map<int, IntVec> IntIntVecMap;
-typedef hash_map<int, IntIntMap> IntIntIntMapMap;
-typedef hash_map<IntPair, int, pair_hf, pair_eq> IntPairIntMap;
-typedef hash_map<IntPair, real, pair_hf, pair_eq> IntPairDoubleMap;
-typedef hash_map<IntPair, DoubleVec, pair_hf, pair_eq> IntPairDoubleVecMap;
-typedef hash_map<IntVec, IntVec, vector_hf, vector_eq> IntVecIntVecMap;
-typedef hash_map<IntVec, DoubleVec, vector_hf, vector_eq> IntVecDoubleVecMap;
+typedef unordered_set<int> IntSet;
+typedef unordered_set<IntPair, pair_hf, pair_eq> IntPairSet;
+typedef unordered_set<IntVec, vector_hf, vector_eq> IntVecSet;
+typedef unordered_map<IntVec, real, vector_hf, vector_eq> IntVecDoubleMap;
+typedef unordered_map<IntVec, int, vector_hf, vector_eq> IntVecIntMap;
+typedef unordered_map<int, int> IntIntMap;
+typedef unordered_map<int, real> IntDoubleMap;
+typedef unordered_map<int, IntPair> IntIntPairMap;
+typedef unordered_map<int, IntVec> IntIntVecMap;
+typedef unordered_map<int, IntIntMap> IntIntIntMapMap;
+typedef unordered_map<IntPair, int, pair_hf, pair_eq> IntPairIntMap;
+typedef unordered_map<IntPair, real, pair_hf, pair_eq> IntPairDoubleMap;
+typedef unordered_map<IntPair, DoubleVec, pair_hf, pair_eq> IntPairDoubleVecMap;
+typedef unordered_map<IntVec, IntVec, vector_hf, vector_eq> IntVecIntVecMap;
+typedef unordered_map<IntVec, DoubleVec, vector_hf, vector_eq> IntVecDoubleVecMap;
 typedef vector<IntIntMap> IntIntMapVec;
 
 typedef vector<const char *> StrVec;
-typedef hash_map<const char *, int, str_hf, str_eq> StrIntMap;
-typedef hash_map<const char *, const char *, str_hf, str_eq> StrStrMap;
+typedef unordered_map<const char *, int, str_hf, str_eq> StrIntMap;
+typedef unordered_map<const char *, const char *, str_hf, str_eq> StrStrMap;
 
 #endif

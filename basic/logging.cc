@@ -54,7 +54,6 @@ bool Run::new_line() {
 LogInfo::LogInfo() {
   ms_per_line   = 0; //1000; // 1 second
   max_ind_level = 10;
-  write_to_stdout = true;
 
   ind_level = 0;
   buf       = "";
@@ -68,11 +67,12 @@ LogInfo::~LogInfo() {
 }
 
 void LogInfo::init() {
-  out.open("/dev/stdout");
-  //if(!log_file.empty())
-    //out.add(log_file.c_str(), true);
-  //if(log_file.empty() || write_to_stdout)
-    //out.add(&cout);
+  if (log_file.empty()) {
+    out.open("/dev/stdout");
+  } else {
+    cout << "Logging to " << log_file << endl;
+    out.open(log_file.c_str());
+  }
 }
 
 LogInfo log_info;
@@ -143,4 +143,3 @@ LogTracker::~LogTracker() {
 int _log_info_max_ind_level = opt_define_int_wrap("max-ind-level", &log_info.max_ind_level, log_info.max_ind_level, "Maximum indent level for logging", false);
 int _log_info_ms_per_line = opt_define_int_wrap("ms-per-line", &log_info.ms_per_line, log_info.ms_per_line, "Print a line out every this many milliseconds", false);
 string _log_info_log_file = opt_define_string_wrap("log", &log_info.log_file, log_info.log_file, "File to write log to (\"\" for stdout)", false);
-bool _log_info_write_to_stdout = opt_define_bool_wrap("stdout", &log_info.write_to_stdout, log_info.write_to_stdout, "Write to stdout in addition to log file", false);

@@ -34,22 +34,31 @@ Ideas:
 #include "basic/union-set.h"
 #include "basic/mem-tracker.h"
 #include "basic/opt.h"
+#include <unistd.h>
 
-opt_define_string(prefix,        "p", "",        "Fills in the other arguments which are empty with <prefix>.*");
-opt_define_string(text_file,     "text", "",     "Text file with corpora (input).");
-opt_define_string(restrict_file, "restrict", "", "Only consider words that appear in this text (input).");
-opt_define_string(paths_file,    "paths", "",    "File containing root-to-node paths in the clustering tree (input/output).");
-opt_define_string(map_file,      "map", "",      "File containing lots of good information about each phrase, more general than paths (output)");
-opt_define_string(collocs_file,  "collocs", "",  "Collocations with most mutual information (output).");
-opt_define_string(featvec_file,  "featvec", "",  "Feature vectors (output).");
+vector< OptInfo<bool> > bool_opts;
+vector< OptInfo<int> > int_opts;
+vector< OptInfo<double> > double_opts;
+vector< OptInfo<string> > string_opts;
 
-opt_define_int(ncollocs,     "ncollocs", 500,    "Collocations with most mutual information (output).");
-opt_define_int(initC,        "c", INT_MAX,       "Number of clusters.");
-opt_define_int(plen,         "plen", 1,          "Maximum length of a phrase to consider.");
-opt_define_int(min_occur,    "min-occur", 1,     "Keep phrases that occur at least this many times.");
-opt_define_bool(chk,         "chk", false,       "Check data structures are valid (expensive).");
-opt_define_bool(print_stats, "stats", false,     "Just print out stats.");
-opt_define_bool(paths2map,   "paths2map", false, "Take the paths file and generate a map file.");
+opt_define_string(output_dir,    "output_dir", "",         "Output everything to this directory.");
+opt_define_string(text_file,     "text", "",               "Text file with corpora (input).");
+opt_define_string(restrict_file, "restrict", "",           "Only consider words that appear in this text (input).");
+opt_define_string(paths_file,    "paths", "",              "File containing root-to-node paths in the clustering tree (input/output).");
+opt_define_string(map_file,      "map", "",                "File containing lots of good information about each phrase, more general than paths (output)");
+opt_define_string(collocs_file,  "collocs", "",            "Collocations with most mutual information (output).");
+opt_define_string(featvec_file,  "featvec", "",            "Feature vectors (output).");
+opt_define_string(comment,       "comment", "",            "Description of this run.");
+
+opt_define_int(ncollocs,     "ncollocs", 500,              "Collocations with most mutual information (output).");
+opt_define_int(initC,        "c", INT_MAX,                 "Number of clusters.");
+opt_define_int(plen,         "plen", 1,                    "Maximum length of a phrase to consider.");
+opt_define_int(min_occur,    "min-occur", 1,               "Keep phrases that occur at least this many times.");
+opt_define_int(rand_seed,    "rand", time(NULL)*getpid(),  "Number to call srand with.");
+
+opt_define_bool(chk,         "chk", false,                 "Check data structures are valid (expensive).");
+opt_define_bool(print_stats, "stats", false,               "Just print out stats.");
+opt_define_bool(paths2map,   "paths2map", false,           "Take the paths file and generate a map file.");
 
 #define use_restrict (!restrict_file.empty())
 const char *delim_str = "$#$";
@@ -855,7 +864,7 @@ void convert_paths_to_map() {
   // Read clusters
   ifstream in(paths_file.c_str());
   char buf[1024];
-  typedef hash_map<string, StringVec, string_hf, string_eq> SSVMap;
+  typedef unordered_map<string, StringVec, string_hf, string_eq> SSVMap;
   SSVMap map;
   while(in.getline(buf, sizeof(buf))) {
     char *path = strtok(buf, "\t");
@@ -1034,31 +1043,28 @@ void output_cluster_paths() {
 int main(int argc, char *argv[]) {
   init_opt(argc, argv);
 
-  if(text_file.empty()) text_file = "/dev/stdin";
   assert(file_exists(text_file.c_str()));
 
-  // Set prefix from arguments.
-  if(prefix.empty()) {
-    prefix = file_base(strip_dir(text_file));
-    prefix += str_printf("-c%d", initC);
-    prefix += str_printf("-p%d", plen);
-    if(!restrict_file.empty()) prefix += str_printf("-R%s", file_base(strip_dir(restrict_file)).c_str());
-    prefix += ".out";
+  // Set output_dir from arguments.
+  if(output_dir.empty()) {
+    output_dir = file_base(strip_dir(text_file));
+    output_dir += str_printf("-c%d", initC);
+    output_dir += str_printf("-p%d", plen);
+    if(!restrict_file.empty()) output_dir += str_printf("-R%s", file_base(strip_dir(restrict_file)).c_str());
+    output_dir += ".out";
   }
 
-  string tmp_prefix = prefix+".tmp";
+  if(system(("mkdir -p " + output_dir).c_str()) != 0)
+    assert2(false, "Can't create " << output_dir);
+  if(system(("rm -f " + output_dir + "/*").c_str()) != 0)
+    assert2(false, "Can't remove things in " << output_dir);
 
-  if(system(("mkdir -p " + tmp_prefix).c_str()) != 0)
-    assert2(false, "Can't create " << tmp_prefix);
-  if(system(("rm -f " + tmp_prefix + "/*").c_str()) != 0)
-    assert2(false, "Can't remove things in " << tmp_prefix);
-
-  // Set arguments from the prefix.
-  if(!prefix.empty()) {
-    if(paths_file.empty())               paths_file = tmp_prefix+"/paths";
-    if(map_file.empty())                   map_file = tmp_prefix+"/map";
-    if(collocs_file.empty())           collocs_file = tmp_prefix+"/collocs";
-    if(log_info.log_file.empty()) log_info.log_file = tmp_prefix+"/log";
+  // Set arguments from the output_dir.
+  if(!output_dir.empty()) {
+    if(paths_file.empty())               paths_file = output_dir+"/paths";
+    if(map_file.empty())                   map_file = output_dir+"/map";
+    if(collocs_file.empty())           collocs_file = output_dir+"/collocs";
+    if(log_info.log_file.empty()) log_info.log_file = output_dir+"/log";
   }
 
   init_log;
@@ -1092,12 +1098,6 @@ int main(int argc, char *argv[]) {
       output_cluster_paths();
     }
   }
-
-  // Move temporary directory to permanent directory.
-  if(system(("rm -rf " + prefix).c_str()) != 0)
-    assert2(false, "Can't remove " << prefix);
-  if(system(("mv " + tmp_prefix + " " + prefix).c_str()) != 0)
-    assert2(false, "Can't move " << tmp_prefix << " to " << prefix);
 
   return 0;
 }

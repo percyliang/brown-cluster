@@ -1,0 +1,5 @@
+0	the	6
+10	chased	3
+110	dog	2
+1110	mouse	2
+1111	cat	2
