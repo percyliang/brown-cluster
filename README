@@ -1,0 +1,42 @@
+Implementation of the Brown hierarchical word clustering algorithm.
+Percy Liang
+Release 1.2
+2008.12.31
+
+Runs in $O(N C^2)$, where $N$ is the number of word types and $C$
+is the number of clusters.
+
+References:
+Brown, et al.: Class-Based n-gram Models of Natural Language
+  http://acl.ldc.upenn.edu/J/J92/J92-4003.pdf
+Liang: Semi-supervised learning for natural language processing
+  http://www.cs.berkeley.edu/~pliang/papers/meng-thesis.pdf
+
+Compile:
+make
+
+Run:
+# Clusters input.txt into 50 clusters (--max-ind-level controls amount of verbose output)
+./wcluster --text input.txt --c 50 --max-ind-level 3
+Look at input-c50-p1.out/paths
+
+============================================================
+Change Log
+
+1.2: make compatible with MacOS (replaced timespec with timeval and changed order of linking).
+1.1: Removed deprecated operators so it works with GCC 4.3.
+
+============================================================
+(C) Copyright 2007, Percy Liang
+
+http://www.cs.berkeley.edu/~pliang
+
+Permission is granted for anyone to copy, use, or modify these programs and
+accompanying documents for purposes of research or education, provided this
+copyright notice is retained, and note is made of any changes that have been
+made.
+
+These programs and documents are distributed without any warranty, express or
+implied.  As the programs were written for research purposes only, they have
+not been tested to the degree that would be advisable in any important
+application.  All use of these programs is entirely at the user's own risk.
