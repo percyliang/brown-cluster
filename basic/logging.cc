@@ -53,7 +53,7 @@ bool Run::new_line() {
 
 LogInfo::LogInfo() {
   ms_per_line   = 0; //1000; // 1 second
-  max_ind_level = 10;
+  max_ind_level = 3;
 
   ind_level = 0;
   buf       = "";

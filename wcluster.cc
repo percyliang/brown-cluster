@@ -51,7 +51,7 @@ opt_define_string(featvec_file,  "featvec", "",            "Feature vectors (out
 opt_define_string(comment,       "comment", "",            "Description of this run.");
 
 opt_define_int(ncollocs,     "ncollocs", 500,              "Collocations with most mutual information (output).");
-opt_define_int(initC,        "c", INT_MAX,                 "Number of clusters.");
+opt_define_int(initC,        "c", 1000,                    "Number of clusters.");
 opt_define_int(plen,         "plen", 1,                    "Maximum length of a phrase to consider.");
 opt_define_int(min_occur,    "min-occur", 1,               "Keep phrases that occur at least this many times.");
 opt_define_int(rand_seed,    "rand", time(NULL)*getpid(),  "Number to call srand with.");
