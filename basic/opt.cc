@@ -112,7 +112,7 @@ void process_opt(int argc, char *argv[]) {
   opt.Parse(argc, argv);
 
   // print help if called for
-  if(opt.Exists("help")) {
+  if(opt.Exists("help") || !opt.Exists("text")) {
     printf("usage: %s\n", argv[0]);
     for(int i = 0; i < (int)bool_opts.size(); i++) {
       const OptInfo<bool> &o = bool_opts[i];
