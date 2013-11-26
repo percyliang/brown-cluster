@@ -15,11 +15,10 @@
 #include <vector>
 #include <string>
 #include <queue>
-#include <tr1/unordered_map>
-#include <tr1/unordered_set>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
-using namespace std::tr1;
 
 ////////////////////////////////////////////////////////////
 
