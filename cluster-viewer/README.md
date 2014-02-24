@@ -23,5 +23,4 @@ This command creates a directory called `clusters/` containing the HTML viewer. 
 
 ## Acknowledgements
 
-These scripts were originally written by [Brendan O'Connor](http://brenocon.com/).
-
+These scripts were originally written by [Brendan O'Connor](http://brenocon.com/) and extended by [Chris Dyer](http://www.cs.cmu.edu/~cdyer/).
