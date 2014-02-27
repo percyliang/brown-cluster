@@ -1,0 +1,9 @@
+table { border-collapse:collapse; border-spacing:0; }
+body { font-family: times; font-size: 11pt; }
+td { border: 1px solid gray; padding:2px 8px; }
+th { border: 1px solid gray; padding:2px 8px; }
+.count { font-size:9pt; color: solid gray; }
+.c { font-size:7pt; color: solid gray; }
+.tdcount { text-align:right }
+.info { font-size: 12pt; }
+.suffixsort { text-align: right }
