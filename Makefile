@@ -7,10 +7,10 @@ else
 endif
 
 wcluster: $(files)
-	g++ -Wall -g -O3 -o wcluster $(files)
+	g++ -Wall -g -std=c++0x -O3 -o wcluster $(files) -lpthread
 
 %.o: %.cc
-	g++ -Wall -g -O3 -o $@ -c $<
+	g++ -Wall -g -O3 -std=c++0x -o $@ -c $< 
 
 clean:
 	rm wcluster basic/*.o *.o

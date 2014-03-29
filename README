@@ -3,7 +3,7 @@ Percy Liang
 Release 1.3
 2012.07.24
 
-Input: a sequence of words separated by whitespcae (see input.txt for an example).
+Input: a sequence of words separated by whitespace (see input.txt for an example).
 Output: for each word type, its cluster (see output.txt for an example).
         In particular, each line is:
   <cluster represented as a bit string> <word> <number of times word occurs in input>
