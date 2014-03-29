@@ -25,8 +25,8 @@ Compile:
 
 Run:
 
-  # Clusters input.txt into 50 clusters (--max-ind-level controls amount of verbose output)
-  ./wcluster --text input.txt --c 50 --max-ind-level 3
+  # Clusters input.txt into 50 clusters:
+  ./wcluster --text input.txt --c 50
   # Output in input-c50-p1.out/paths
 
 ============================================================
