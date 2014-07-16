@@ -1093,7 +1093,7 @@ struct StackItem {
 // of Stage 2 merges, and the bottom part, which consists of stage 1 merges.
 // Print out paths from the root only through the stage 2 merges.
 void output_cluster_paths() {
-  char path[16384];
+  char path[MAX_BUFFER_SIZE];
   vector<StackItem> stack;
 
   // Figure out what to output

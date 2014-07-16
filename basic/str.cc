@@ -13,7 +13,7 @@ string substr(const string &s, int i) {
 }
 
 string str_printf(const char *fmt, ...) {
-  char buf[16384];
+  char buf[MAX_BUFFER_SIZE];
   va_list ap;
   va_start(ap, fmt);
   vsnprintf(buf, sizeof(buf), fmt, ap);

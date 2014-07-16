@@ -19,7 +19,7 @@ void destroy_strings(StrStrMap &map) {
 ////////////////////////////////////////////////////////////
 
 int StrDB::read(istream &in, int N, bool one_way) {
-  char s[16384];
+  char s[MAX_BUFFER_SIZE];
   clear();
   while(size() < N && in >> s) {
     if(one_way) i2s.push_back(copy_str(s));
@@ -159,7 +159,7 @@ void read_text(const char *file, int_func *func, StrDB &db, bool read_cached, bo
     db.read(strdb_file.c_str(), true);
     track_block("", "Reading from " << int_file, false) {
       ifstream in(int_file.c_str());
-      char buf[16384];
+      char buf[MAX_BUFFER_SIZE];
       while(true) {
         in.read(buf, sizeof(buf));
         if(in.gcount() == 0) break;
@@ -184,8 +184,8 @@ void read_text(const char *file, int_func *func, StrDB &db, bool read_cached, bo
       }
       if(write_cached) logs("Writing to " << int_file);
 
-      char s[16384];
-      char buf[16384]; int buf_i = 0; // Output buffer
+      char s[MAX_BUFFER_SIZE];
+      char buf[MAX_BUFFER_SIZE]; int buf_i = 0; // Output buffer
       while(in >> s) { // Read a string
         int a = db.lookup(s, incorp_new, -1);
         if(func) func(a);

@@ -21,6 +21,7 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////
+#define MAX_BUFFER_SIZE 36384
 
 #define len(vec) (int)(vec).size()
 #define sq(x) ((x)*(x))
