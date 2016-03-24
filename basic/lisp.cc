@@ -9,7 +9,7 @@ void LispNode::destroy() {
   }
 }
 
-void LispNode::print(int ind) const {
+void LispNode::print(intIndex ind) const {
   cout << Indent(ind) << (value.empty() ? "(empty)" : value) << endl;
   forvec(_, LispNode *, subnode, children)
     subnode->print(ind+1);
@@ -82,7 +82,7 @@ bool LispTree::read_token(istream &in, string &s) {
   return true;
 }
 
-LispNode *LispTree::read_node(const vector<string> &tokens, int &i) {
+LispNode *LispTree::read_node(const vector<string> &tokens, intIndex &i) {
   LispNode *node = new LispNode();
   assert(i < len(tokens));
 
@@ -118,7 +118,7 @@ void LispTree::read(const char *file) {
   while(read_token(in, token)) {
     tokens.push_back(token);
   }
-  int i = 0;
+  intIndex i = 0;
   root = read_node(tokens, i);
   assert(i == len(tokens));
 }

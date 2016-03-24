@@ -138,7 +138,7 @@ bool all_done = false;
 #define num_phrases(l) (len(phrases[l])/(l))
 
 int N; // number of phrases
-int T; // length of text
+intIndex T; // length of text
 
 // Output a phrase.
 struct Phrase { Phrase(int a) : a(a) { } int a; };
@@ -333,10 +333,10 @@ void read_text() {
   // Count the phrases that we care about so we can map them all to integers.
   track_block("Counting phrases", "", false) {
     phrases.resize(plen+1);
-    for(int l = 1; l <= plen; l++) {
+    for(intIndex l = 1; l <= plen; l++) {
       // Count.
       IntVecIntMap freqs; // phrase vector -> number of occurrences
-      for(int i = 0; i < T-l+1; i++) {
+      for(intIndex i = 0; i < T-l+1; i++) {
         IntVec a_vec = subvector(text, i, i+l);
         if(!is_good_phrase(a_vec)) continue;
         freqs[a_vec]++;
@@ -345,29 +345,31 @@ void read_text() {
       forcmap(const IntVec &, a_vec, int, count, IntVecIntMap, freqs) {
         if(count < min_occur) continue;
 
-        int a = len(phrase_freqs);
+        int a = (int)len(phrase_freqs);
         phrase_freqs.push_back(count);
         vec2phrase[a_vec] = a;
         forvec(_, int, w, a_vec) phrases[l].push_back(w);
       }
 
+      INT_SIZED(len(freqs));
       logs(len(freqs) << " distinct phrases of length " << l << ", keeping " << num_phrases(l) << " which occur at least " << min_occur << " times");
     }
   }
 
-  N = len(phrase_freqs); // number of phrases
+  INT_SIZED(len(phrase_freqs));
+  N = (int)len(phrase_freqs); // number of phrases
 
   track_block("Finding left/right phrases", "", false) {
     left_phrases.resize(N);
     right_phrases.resize(N);
-    for(int l = 1; l <= plen; l++) {
-      for(int i = 0; i < T-l+1; i++) {
+    for(intIndex l = 1; l <= plen; l++) {
+      for(intIndex i = 0; i < T-l+1; i++) {
         IntVec a_vec = subvector(text, i, i+l);
         if(!contains(vec2phrase, a_vec)) continue;
         int a = vec2phrase[a_vec];
 
         // Left
-        for(int ll = 1; ll <= plen && i-ll >= 0; ll++) {
+        for(intIndex ll = 1; ll <= plen && i-ll >= 0; ll++) {
           IntVec aa_vec = subvector(text, i-ll, i);
           if(!contains(vec2phrase, aa_vec)) continue;
           int aa = vec2phrase[aa_vec];
@@ -376,7 +378,7 @@ void read_text() {
         }
 
         // Right
-        for(int ll = 1; ll <= plen && i+l+ll <= T; ll++) {
+        for(intIndex ll = 1; ll <= plen && i+l+ll <= T; ll++) {
           IntVec aa_vec = subvector(text, i+l, i+l+ll);
           if(!contains(vec2phrase, aa_vec)) continue;
           int aa = vec2phrase[aa_vec];
@@ -391,7 +393,7 @@ void read_text() {
   if(!featvec_file.empty()) {
     ofstream out(featvec_file.c_str());
     out << N << ' ' << 2*N << endl;
-    foridx(a, N) {
+    forsidx(a, N) {
       IntIntMap phrase_counts;
       add_to_set(left_phrases[a], phrase_counts, 0);
       add_to_set(right_phrases[a], phrase_counts, N);
@@ -537,7 +539,7 @@ void create_initial_clusters() {
   track("create_initial_clusters()", "", true);
 
   freq_order_phrases.resize(N);
-  foridx(a, N) freq_order_phrases[a] = a;
+  forsidx(a, N) freq_order_phrases[a] = a;
 
   logs("Sorting " << N << " phrases by frequency");
   sort(freq_order_phrases.begin(), freq_order_phrases.end(), phrase_freq_greater);
@@ -551,7 +553,7 @@ void create_initial_clusters() {
   // Create the inital clusters.
   phrase2rep.Init(N); // Init union-set: each phrase starts out in its own cluster
   curr_minfo = 0.0;
-  foridx(s, initC) {
+  forsidx(s, initC) {
     int a = freq_order_phrases[s];
     put_cluster_in_slot(a, s);
 
@@ -599,7 +601,8 @@ void output_best_collocations() {
   FOR_SLOT(s) FOR_SLOT(t) {
     collocs.push_back(pair<double, IntPair>(q2[s][t], _(slot2cluster[s], slot2cluster[t])));
   }
-  ncollocs = min(ncollocs, len(collocs));
+  INT_SIZED(len(collocs));
+  ncollocs = min(ncollocs, (int)len(collocs));
   partial_sort(collocs.begin(), collocs.begin()+ncollocs, collocs.end(), greater< pair<double, IntPair> >());
 
   ofstream out(collocs_file.c_str());
@@ -697,7 +700,8 @@ void update_L2(int thread_id) {
     thread_start[thread_id].lock();
     if ( all_done ) break;  // mechanism to close the threads
 
-    int num_clusters = len(slot2cluster);
+    INT_SIZED(len(slot2cluster));
+    int num_clusters = (int)len(slot2cluster);
 
     if (the_job.is_type_a) {
       int s = the_job.s;
@@ -893,7 +897,7 @@ void compute_cluster_distribs() {
   IntIntMap count1; // cluster a -> number of times a appears
 
   // Compute cluster distributions
-  foridx(a, N) {
+  forsidx(a, N) {
     int ca = phrase2cluster(a);
     forvec(_, int, b, right_phrases[a]) {
       int cb = phrase2cluster(b);
@@ -906,7 +910,7 @@ void compute_cluster_distribs() {
   // For each word (phrase), compute its distribution
   kl_map[0].resize(N);
   kl_map[1].resize(N);
-  foridx(a, N) {
+  forsidx(a, N) {
     int ca = phrase2cluster(a);
     IntIntMap a_count2;
     int a_count1 = 0;
@@ -930,6 +934,7 @@ void compute_cluster_distribs() {
       a_count1++;
     }
     kl = kl_map[1][a] = kl_divergence(a_count2, a_count1, count2, count1, ca, true);
+    (void)kl;
     //logs("Right-KL(" << Phrase(a) << " | " << Cluster(ca) << ") = " << kl);
   }
 }
@@ -958,7 +963,7 @@ void convert_paths_to_map() {
 
   // Create the inital clusters.
   phrase2rep.Init(N); // Init union-set: each phrase starts out in its own cluster
-  foridx(a, N) {
+  forsidx(a, N) {
     rep2cluster[a] = a;
     cluster2rep[a] = a;
   }

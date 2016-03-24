@@ -135,10 +135,10 @@ template<class T> inline int vector_min(const vector<T> &vec) {
 }
 
 // Returns the index of the maximum element in vec.
-template<class T> inline int vector_index_max(const vector<T> &vec) {
+template<class T> inline intIndex vector_index_max(const vector<T> &vec) {
   T max = vec[0];
   int best_i = 0;
-  foridx(i, len(vec)) {
+  forsidx(i, len(vec)) {
     if(vec[i] > max) {
       max = vec[i];
       best_i = i;
@@ -155,8 +155,8 @@ template<class T> inline int vector_max(const vector<T> &vec) {
 template<class T> inline IntPair matrix_index_max(const vector< vector<T> > &mat) {
   T max = mat[0][0];
   IntPair best_ij = IntPair(0, 0);
-  foridx(i, len(mat)) {
-    foridx(j, len(mat[i])) {
+  forsidx(i, len(mat)) {
+    forsidx(j, len(mat[i])) {
       if(mat[i][j] > max) {
         max = mat[i][j];
         best_ij = IntPair(i, j);
@@ -190,8 +190,8 @@ template<class T> ostream &operator<<(ostream &out, const vector< vector<T> > &m
   return out;
 }
 
-template<class T> vector<T> subvector(const vector<T> &vec, int i, int j = -1) {
-  int N = len(vec);
+template<class T> vector<T> subvector(const vector<T> &vec, intIndex i, intIndex j = -1) {
+  intIndex N = len(vec);
   if(j < 0) j += N;
   if(j < i) j = i;
 

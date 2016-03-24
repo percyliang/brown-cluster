@@ -15,7 +15,7 @@ using namespace std;
 
 multi_buf::~multi_buf() {
   flush();
-  for(int i = 0; i < (int)infos.size(); i++)
+  for(size_t i = 0; i < infos.size(); i++)
     infos[i].destroy();
 }
 
@@ -24,7 +24,7 @@ void multi_buf::add(ostream *out, bool own, bool hard) {
 }
 
 void multi_buf::flush() {
-  for(int i = 0; i < (int)infos.size(); i++) {
+  for(size_t i = 0; i < infos.size(); i++) {
     ostream_info &info = infos[i];
     info.out->write(buf, buf_i); 
     info.out->flush();
@@ -33,7 +33,7 @@ void multi_buf::flush() {
 }
 
 void multi_buf::hard_flush() {
-  for(int i = 0; i < (int)infos.size(); i++) {
+  for(size_t i = 0; i < infos.size(); i++) {
     ostream_info &info = infos[i];
     info.out->write(buf, buf_i); 
     if(info.hard)

@@ -20,14 +20,19 @@
 
 using namespace std;
 
+typedef long intIndex;
+
+#define INT_SIZED(x)    assert((x) < 2147483648L)
+
 ////////////////////////////////////////////////////////////
 
-#define len(vec) (int)(vec).size()
+#define len(vec) (intIndex)(vec).size()
 #define sq(x) ((x)*(x))
 
 // For loop sugar.  This is such a hack!
-#define foridx(i, n)                  for(int i = 0; i < n; i++)
-#define forvec(i, tx, x, vec)         for(int i = 0, _##i = 0; i < len(vec); i++) \
+#define foridx(i, n)                  for(intIndex i = 0; i < n; i++)
+#define forsidx(i, n)                 for(int i = 0; i < n; i++)
+#define forvec(i, tx, x, vec)         for(intIndex i = 0, _##i = 0; i < len(vec); i++) \
                                       for(tx x = (vec)[i]; i == _##i; _##i++)
 #define formap(tx, x, ty, y, t, map)  forstl(t, _##x##y, map) _mapvars(tx, x, ty, y)
 #define forcmap(tx, x, ty, y, t, map) forcstl(t, _##x##y, map) _mapvars(tx, x, ty, y)
@@ -39,10 +44,10 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 // Generate random numbers.
 
-inline int mrand(int a)        { return rand() % a; }
-inline int mrand(int a, int b) { return rand() % (b-a) + a; }
+inline intIndex mrand(intIndex a)        { return rand() % a; }
+inline intIndex mrand(intIndex a, intIndex b) { return rand() % (b-a) + a; }
 inline double rand_double() {
-  static const int BASE = 100000;
+  static const intIndex BASE = 100000;
   return (double)(rand()%BASE)/BASE;
 }
 
@@ -57,7 +62,7 @@ inline bool fgt(double u, double v) { return u - TOL > v; }
 // Comparing floating point numbers.
 inline bool feq(double u, double v, double tol = TOL) { return fabs(u-v) < tol; }
 
-template <class T> inline int sign(T u) {
+template <class T> inline intIndex sign(T u) {
   if(u < 0) return -1;
   if(u > 0) return 1;
   return 0;
@@ -96,7 +101,7 @@ template<class T> inline void _assert_eq(const T &u, const T &v, const char *us,
 string now();
 string hostname();
 int cpu_speed_mhz();
-int mem_usage(); // in kB
+long mem_usage(); // in kB
 
 bool create_file(const char *file);
 bool file_exists(const char *file);
