@@ -22,7 +22,7 @@ struct StrDB {
   void write(ostream &out);
   void write(const char *file);
 
-  int size() const   { return len(i2s); }
+  intIndex size() const   { return len(i2s); }
   void clear()       { destroy_strings(); i2s.clear(); s2i.clear(); }
   void destroy()     { destroy_strings(); ::destroy(i2s); ::destroy(s2i); }
   void destroy_s2i() { ::destroy(s2i); }
@@ -53,7 +53,7 @@ struct IntPairIntDB {
   IntPair operator[](int i) const { return i2p[i]; }
   int operator[](const IntPair &p) { return lookup(p, true, -1); }
   int lookup(const IntPair &p, bool incorp_new, int default_i);
-  int size() const { return len(i2p); }
+  intIndex size() const { return len(i2p); }
 
   int read(istream &in, int N);
   void write(ostream &out);
@@ -69,7 +69,7 @@ struct IntVecIntDB {
   const IntVec &operator[](int i) const { return i2v[i]; }
   int operator[](const IntVec &v) { return lookup(v, true, -1); }
   int lookup(const IntVec &v, bool incorp_new, int default_i);
-  int size() const { return len(i2v); }
+  intIndex size() const { return len(i2v); }
 
   IntVecIntMap v2i;
   IntVecVec i2v;

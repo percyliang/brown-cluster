@@ -18,7 +18,7 @@ string hostname() {
 }
 
 // Return the amount of memory (kB) used by this process
-int mem_usage() {
+long mem_usage() {
   ifstream in("/proc/self/status");
   if(!in) return 0;
   char buf[1024];
@@ -28,8 +28,8 @@ int mem_usage() {
     if(strncmp(buf, key, strlen(key)) != 0) continue;
     char *s = strchr(buf, ':');
     if(!s) return 0;
-    int x;
-    sscanf(s+1, "%d", &x);
+    long x;
+    sscanf(s+1, "%ld", &x);
     return x;
   }
   return -1;

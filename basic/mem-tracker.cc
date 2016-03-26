@@ -8,7 +8,7 @@
 
 ////////////////////////////////////////////////////////////
 
-int MemTracker::compute_mem_usage(const MemRecord &r) {
+long MemTracker::compute_mem_usage(const MemRecord &r) {
   switch(r.type) {
     list_types(define_case);
     default: assert(0);
@@ -16,8 +16,8 @@ int MemTracker::compute_mem_usage(const MemRecord &r) {
   return 0;
 }
 
-int MemTracker::compute_mem_usage() {
-  int total_mem = 0;
+long MemTracker::compute_mem_usage() {
+  long total_mem = 0;
   forvec(_, MemRecord &, r, records) {
     if(r.type != T_RAWNUMBER) r.mem = compute_mem_usage(r);
     total_mem += r.mem;
@@ -32,7 +32,7 @@ static bool record_less_than(const MemRecord &r1, const MemRecord &r2) {
 void MemTracker::report_mem_usage() {
   track("report_mem_usage()", "", true);
 
-  int total_mem = compute_mem_usage();
+  long total_mem = compute_mem_usage();
 
   sort(records.begin(), records.end(), record_less_than);
 
