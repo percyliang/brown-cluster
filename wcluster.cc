@@ -2,10 +2,10 @@
 Hierarchically clusters phrases.
 Running time: O(N*C^2).
 
-We want to cluster the phrases so that the pairwise mututal information between
-clusters is maximized.  This mututal information is a sum over terms between
+We want to cluster the phrases so that the pairwise mutual information between
+clusters is maximized.  This mutual information is a sum over terms between
 each pair of clusters: q2[a, b] for clusters a and b.  The trick is to compute
-quickly the loss of mututal information when two clusters a and b are merged.
+quickly the loss of mutual information when two clusters a and b are merged.
 
 The four structures p1, p2, q2, L2 allow this quick computation.
   p1[a] = probability of of cluster a.
@@ -16,8 +16,6 @@ The four structures p1, p2, q2, L2 allow this quick computation.
 Changes:
  * Removed hash tables for efficiency.
  * Notation: a is an phrase (sequence of words), c is a cluster, s is a slot.
-* Removed hash tables for efficiency.
-* Notation: a is an phrase (sequence of words), c is a cluster, s is a slot.
 
 To cut down memory usage:
  * Change double to float.
@@ -463,7 +461,7 @@ void repcheck() {
 
   assert_eq(len(rep2cluster), len(cluster2rep));
   assert_eq(len(rep2cluster), len(cluster2slot));
-  
+
   assert(free_slot1 == -1 || slot2cluster[free_slot1] == -1);
   assert(free_slot2 == -1 || slot2cluster[free_slot2] == -1);
   FOR_SLOT(s) {
@@ -506,7 +504,7 @@ double compute_L2_using_old(int s, int t, int u, int v, int w) {
   assert(v != u && w != u);
 
   double l = L2[v][w];
-  
+
   // Remove old associations between v and w with s and t
   l -= bi_q2(v, s) + bi_q2(w, s) + bi_q2(v, t) + bi_q2(w, t);
   l += bi_hyp_q2(_(v, w), s) + bi_hyp_q2(_(v, w), t);
@@ -641,7 +639,7 @@ void incorporate_new_phrase(int a) {
 
   // Compute p1
   p1[s] = (double)phrase_freqs[a] / T;
-  
+
   // Overall all calls: O(T)
   // Compute p2, q2 between a and everything in clusters
   IntIntMap freqs;
@@ -994,7 +992,7 @@ void convert_paths_to_map() {
         rep2cluster[C] = c;
         a = c;
       }
-      else 
+      else
         a = b;
     }
   }
@@ -1024,7 +1022,7 @@ void convert_paths_to_map() {
 
 void do_clustering() {
   track("do_clustering()", "", true);
-  
+
   compute_L2();
   repcheck();
 
