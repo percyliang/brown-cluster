@@ -25,6 +25,7 @@ typedef long intIndex;
 #define INT_SIZED(x)    assert((x) < 2147483648L)
 
 ////////////////////////////////////////////////////////////
+#define MAX_BUFFER_SIZE 36384
 
 #define len(vec) (intIndex)(vec).size()
 #define sq(x) ((x)*(x))

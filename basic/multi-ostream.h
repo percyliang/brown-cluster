@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "hard-ofstream.h"
+#include "std.h"
 
 using namespace std;
 
@@ -41,7 +42,7 @@ protected:
 
 private:
   vector<ostream_info> infos;
-  char buf[16384];
+  char buf[MAX_BUFFER_SIZE];
   int buf_i;
 };
 
