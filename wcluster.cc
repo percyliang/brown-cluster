@@ -63,6 +63,7 @@ opt_define_int(num_threads, "threads", 1,                  "Number of threads to
 opt_define_bool(chk,         "chk", false,                 "Check data structures are valid (expensive).");
 opt_define_bool(print_stats, "stats", false,               "Just print out stats.");
 opt_define_bool(paths2map,   "paths2map", false,           "Take the paths file and generate a map file.");
+opt_define_bool(no_prune,    "no_prune", false,            "Do not prune the hierarchy (show all N leaf clusters)");
 
 #define use_restrict (!restrict_file.empty())
 const char *delim_str = "$#$";
@@ -105,7 +106,7 @@ DoubleVecVec q2;     // slots s, t (contianing clusters a, b) -> contribution to
 DoubleVecVec L2;     // slots s, t (containing clusters a, b) -> loss of mutual information if merge a and b
 
 int curr_cluster_id; // ID to assign to a new cluster
-int stage2_cluster_offset; // start of the IDs of clusters created in stage 2
+int stage2_cluster_offset; // start of the IDs of clusters created in stage 2: set to 0 if no pruning.
 
 double curr_minfo; // Mutual info, should be sum of all q2's
 
@@ -1057,7 +1058,7 @@ void do_clustering() {
 
   compute_cluster_distribs();
 
-  stage2_cluster_offset = curr_cluster_id;
+  stage2_cluster_offset = (no_prune) ? 0 : curr_cluster_id;
 
   // Stage 2: Merge the initC clusters in an hierarchical manner.
   // O(C^3) time.
@@ -1094,7 +1095,7 @@ struct StackItem {
 
 // The cluster tree is composed of the top part, which consists
 // of Stage 2 merges, and the bottom part, which consists of stage 1 merges.
-// Print out paths from the root only through the stage 2 merges.
+// Print out paths from the root only through the stage 2 merges (print all if no pruning).
 void output_cluster_paths() {
   char path[16384];
   vector<StackItem> stack;
@@ -1136,7 +1137,7 @@ void output_cluster_paths() {
     }
     else {
       const IntPair &children = it->second;
-      // Only print out paths through the part of the tree constructed in stage 2.
+      // Only print out paths through the part of the tree constructed in stage 2 (print all if no pruning).
       bool extend = a >= stage2_cluster_offset;
       int new_path_i = path_i + extend;
 
