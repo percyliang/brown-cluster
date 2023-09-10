@@ -11,7 +11,7 @@ def get_word_rows():
 def get_cluster_rows():
     for path, rows in itertools.groupby(get_word_rows(), key=lambda x: x[0]):
         wordcounts = [(w,c) for _,w,c in rows]
-        wordcounts.sort(key=lambda (w,c): -c)
+        wordcounts.sort(key=lambda w_c: -w_c[1])
 
         yield path, len(wordcounts), wordcounts[:50], wordcounts
 
@@ -37,37 +37,37 @@ for path, nwords, wordcounts, allwc in get_cluster_rows():
     #     w=htmlescape(w), c=c) for w,c in wordcounts)
     wc1 = ' '.join("<span class=w>{w}</span>".format(
         w=htmlescape(w)) for w,c in top(wordcounts, 0.01))
-    
-    print """
+
+    print("""
     <tr>
     <td class=path>^<a target=_blank href="paths/{path}.html">{path}</a> <span class=count>({nwords})</span>
     <td class=words>{wc}
-    """.format(path=path, nwords=nwords, wc=wc1)
-    print "</tr>"
+    """.format(path=path, nwords=nwords, wc=wc1))
+    print("</tr>")
 
     with open(sys.argv[2] + '/paths/{path}.html'.format(**locals()),'w') as f:
-        print>>f,"""<style>{style}</style>""".format(**locals())
-        print>>f,"""<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">"""
-        print>>f,"<a href=../cluster_viewer.html>back to cluster viewer</a>"
-        print>>f,"<h1>cluster path {path}</h1>".format(path=path)
-        
-        print>>f, "{n:,} words, {t:,} tokens".format(n=nwords, t=sum(c for w,c in allwc))
-        print>>f, "<a href='#freq'>freq</a> <a href='#alpha'>alpha</a> <a href='#suffix'>suffix</a>"
+        print("""<style>{style}</style>""".format(**locals()), file=f)
+        print("""<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">""", file=f)
+        print("<a href=../cluster_viewer.html>back to cluster viewer</a>", file=f)
+        print("<h1>cluster path {path}</h1>".format(path=path), file=f)
 
-        print>>f,"<a name=freq><h2>Words in frequency order</h2></a>"
-        allwc.sort(key=lambda (w,c): (-c,w))
-        print>>f, wc_table(allwc)
+        print("{n:,} words, {t:,} tokens".format(n=nwords, t=sum(c for w,c in allwc)), file=f)
+        print("<a href='#freq'>freq</a> <a href='#alpha'>alpha</a> <a href='#suffix'>suffix</a>", file=f)
+
+        print("<a name=freq><h2>Words in frequency order</h2></a>", file=f)
+        allwc.sort(key=lambda w_c: (-w_c[1],w_c[0]))
+        print(wc_table(allwc), file=f)
         # wc1 = ' '.join("<span class=w>{w}</span>&nbsp;<span class=c>({c})</span>".format(
         #     w=htmlescape(w), c=c) for w,c in allwc)
         # print>>f, wc1
 
-        print>>f, "<a name=alpha><h2>Words in alphabetical order</h2></a>"
-        allwc.sort(key=lambda (w,c): (w,-c))
-        print>>f, wc_table(allwc)
+        print("<a name=alpha><h2>Words in alphabetical order</h2></a>", file=f)
+        allwc.sort(key=lambda w_c1: (w_c1[0],-w_c1[1]))
+        print(wc_table(allwc), file=f)
 
-        print>>f, "<a name=suffix><h2>Words in suffix order</h2></a>"
-        allwc.sort(key=lambda (w,c): (list(reversed(w)),-c))
-        print>>f, wc_table(allwc, tdword='suffixsort')
+        print("<a name=suffix><h2>Words in suffix order</h2></a>", file=f)
+        allwc.sort(key=lambda w_c2: (list(reversed(w_c2[0])),-w_c2[1]))
+        print(wc_table(allwc, tdword='suffixsort'), file=f)
         # wc1 = ' '.join("<span class=w>{w}</span>&nbsp;<span class=c>({c})</span>".format(
         #     w=htmlescape(w), c=c) for w,c in allwc)
         # print>>f, wc1
