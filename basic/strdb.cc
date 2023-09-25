@@ -184,9 +184,9 @@ void read_text(const char *file, int_func *func, StrDB &db, bool read_cached, bo
       }
       if(write_cached) logs("Writing to " << int_file);
 
-      char s[16384];
       char buf[16384]; int buf_i = 0; // Output buffer
-      while(in >> s) { // Read a string
+      for(std::string line; getline( in, line, ' ');) {
+        const char *s = line.c_str();
         int a = db.lookup(s, incorp_new, -1);
         if(func) func(a);
 
